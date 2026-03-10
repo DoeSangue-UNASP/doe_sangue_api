@@ -9,5 +9,5 @@ public class Hemocentro
     public DateTime AbreEm { get; set; }
     public DateTime FechaEm { get; set; }
 
-    public Usuario Usuario { get; set; }
+    public required Usuario Usuario { get; set; }
 }

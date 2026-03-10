@@ -2,7 +2,7 @@
 
 namespace DoeSangue.Domain.Entities;
 
-public class BolsasSangue
+public class BolsaSangue
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Codigo { get; set; } = string.Empty;
@@ -15,5 +15,5 @@ public class BolsasSangue
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
     public DateTime AtualizadoEm { get; set; }
 
-    public Agendamento Agendamento { get; set; }
+    public required Agendamento Agendamento { get; set; }
 }

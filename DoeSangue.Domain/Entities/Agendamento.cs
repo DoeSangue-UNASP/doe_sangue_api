@@ -10,6 +10,6 @@ public class Agendamento
     public DateTime AgendadoPara { get; set; }
     public StatusAgendamento Status { get; set; } = StatusAgendamento.AGENDADO;
 
-    public Hemocentro Hemocentro { get; set; }
-    public Doador Doador { get; set; }
+    public required Hemocentro Hemocentro { get; set; }
+    public required Doador Doador { get; set; }
 }

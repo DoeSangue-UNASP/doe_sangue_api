@@ -8,6 +8,6 @@ public class Depoimento
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
     public DateTime AtualizadoEm { get; set; }
 
-    // Tanto faz o usuário, pode ser hemocentro ou doador
-    public Usuario Autor { get; set; }
+    // Autor do depoimento: qualquer Usuario (hemocentro, doador ou outro papel); associação sempre via Usuario.
+    public Usuario? Autor { get; set; }
 }

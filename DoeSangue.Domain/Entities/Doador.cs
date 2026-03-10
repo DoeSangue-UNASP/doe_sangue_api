@@ -8,5 +8,5 @@ public class Doador
     public string Telefone { get; set; } = string.Empty;
     public DateOnly DataNascimento { get; set; }
 
-    public Usuario Usuario { get; set; }
+    public required Usuario Usuario { get; set; }
 }
