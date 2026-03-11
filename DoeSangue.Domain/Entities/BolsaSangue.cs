@@ -13,7 +13,7 @@ public class BolsaSangue
     public float Volume { get; set; }
     public StatusBolsa Status { get; set; } = StatusBolsa.EM_ANALISE;
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
-    public DateTime AtualizadoEm { get; set; }
+    public DateTime? AtualizadoEm { get; set; }
 
     public required Agendamento Agendamento { get; set; }
 }
