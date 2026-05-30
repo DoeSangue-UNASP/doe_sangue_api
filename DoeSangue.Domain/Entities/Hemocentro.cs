@@ -9,5 +9,46 @@ public class Hemocentro
     public DateTime AbreEm { get; set; }
     public DateTime FechaEm { get; set; }
 
-    public required Usuario Usuario { get; set; }
+    public Usuario Usuario { get; set; }
+
+    private Hemocentro(Guid id, string cnpj, string site, string nomeFantasia, DateTime abreEm, DateTime fechaEm, Usuario usuario)
+    {
+        Id = id;
+        Cnpj = cnpj;
+        Site = site;
+        NomeFantasia = nomeFantasia;
+        AbreEm = abreEm;
+        FechaEm = fechaEm;
+        Usuario = usuario;
+    }
+
+    public static Hemocentro Criar(string cnpj, string site, string nomeFantasia, DateTime abreEm, DateTime fechaEm, Usuario usuario)
+    {
+        var hemocentro = new Hemocentro(id: Guid.NewGuid(),
+                                        cnpj: cnpj,
+                                        site: site,
+                                        nomeFantasia: nomeFantasia,
+                                        abreEm: abreEm,
+                                        fechaEm: fechaEm,
+                                        usuario: usuario);
+
+        hemocentro.Validar();
+
+        return hemocentro;
+    }
+
+    public void Validar()
+    {
+        if (string.IsNullOrWhiteSpace(Cnpj))
+            throw new ArgumentException("O CNPJ é obrigatório.");
+
+        if (string.IsNullOrWhiteSpace(Site))
+            throw new ArgumentException("O site é obrigatório.");
+
+        if (string.IsNullOrWhiteSpace(NomeFantasia))
+            throw new ArgumentException("O nome fantasia é obrigatório.");
+
+        if (Usuario == null)
+            throw new ArgumentException("O usuário associado ao hemocentro é obrigatório.");
+    }
 }
