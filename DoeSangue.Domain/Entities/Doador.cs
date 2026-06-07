@@ -49,4 +49,6 @@ public class Doador
         if (Usuario == null)
             throw new ArgumentException("O usuário associado ao doador é obrigatório.");
     }
+
+    public void AdicionarUsuario(Usuario usuario) => Usuario = usuario;
 }

@@ -11,12 +11,14 @@ namespace DoeSangue.API.Controllers.Doadores
         private readonly CriarDoadorUseCase _criarDoadorUseCase;
         private readonly BuscarDoadorPorId _buscarDoadorPorId;
         private readonly ExcluirDoadorPorUsuarioId _excluirDoadorPorUsuarioId;
+        private readonly AtualizarDoadorPorId _atualizarDoadorPorId;
 
-        public DoadorController(CriarDoadorUseCase criarDoadorUseCase, BuscarDoadorPorId buscarDoadorPorUsuarioId, ExcluirDoadorPorUsuarioId excluirDoadorPorUsuarioId)
+        public DoadorController(CriarDoadorUseCase criarDoadorUseCase, BuscarDoadorPorId buscarDoadorPorUsuarioId, ExcluirDoadorPorUsuarioId excluirDoadorPorUsuarioId, AtualizarDoadorPorId atualizarDoadorPorId)
         {
             _criarDoadorUseCase = criarDoadorUseCase;
             _buscarDoadorPorId = buscarDoadorPorUsuarioId;
             _excluirDoadorPorUsuarioId = excluirDoadorPorUsuarioId;
+            _atualizarDoadorPorId = atualizarDoadorPorId;
         }
 
         [HttpPost]
@@ -65,6 +67,25 @@ namespace DoeSangue.API.Controllers.Doadores
                 await _excluirDoadorPorUsuarioId.Executar(usuarioId);
 
                 return NoContent();
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpPut("{doadorId}")]
+        public async Task<IActionResult> Atualizar(Guid doadorId, [FromBody] AtualizarDoadorDto doadorDto)
+        {
+            try
+            {
+                await _atualizarDoadorPorId.Executar(doadorId, doadorDto);
+
+                return NoContent();
+            }
+            catch (ArgumentException exception)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, exception.Message);
             }
             catch (Exception exception)
             {
