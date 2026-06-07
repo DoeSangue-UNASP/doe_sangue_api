@@ -10,6 +10,7 @@ public class Doador
 
     public Usuario Usuario { get; set; }
 
+    public Doador() { }
     private Doador(Guid id, string nome, string documento, string telefone, DateOnly dataNascimento, Usuario usuario)
     {
         Id = id;

@@ -1,4 +1,6 @@
-﻿namespace DoeSangue.Infrastructure.Models;
+﻿using DoeSangue.Domain.Entities;
+
+namespace DoeSangue.Infrastructure.Models;
 
 public class DoadorModel
 {
@@ -20,5 +22,27 @@ public class DoadorModel
         Telefone = telefone;
         DataNascimento = dataNascimento;
         UsuarioId = usuarioId;
+    }
+
+    public DoadorModel(Doador doador)
+    {
+        Id = doador.Id;
+        Nome = doador.Nome;
+        Documento = doador.Documento;
+        Telefone = doador.Telefone;
+        DataNascimento = doador.DataNascimento;
+        UsuarioId = doador.Usuario.Id;
+    }
+
+    public Doador ToDomain()
+    {
+        return new Doador
+        {
+            Id = Id,
+            Nome = Nome,
+            Documento = Documento,
+            Telefone = Telefone,
+            DataNascimento = DataNascimento
+        };
     }
 }

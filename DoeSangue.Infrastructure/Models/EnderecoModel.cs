@@ -1,4 +1,6 @@
-﻿namespace DoeSangue.Infrastructure.Models;
+﻿using DoeSangue.Domain.Entities;
+
+namespace DoeSangue.Infrastructure.Models;
 
 public class EnderecoModel
 {
@@ -20,5 +22,30 @@ public class EnderecoModel
         Bairro = bairro;
         Cidade = cidade;
         Estado = estado;
+    }
+
+    public EnderecoModel(Endereco endereco)
+    {
+        Id = endereco.Id;
+        Cep = endereco.Cep;
+        Numero = endereco.Numero;
+        Rua = endereco.Rua;
+        Bairro = endereco.Bairro;
+        Cidade = endereco.Cidade;
+        Estado = endereco.Estado;
+    }
+
+    public Endereco ToDomain()
+    {
+        return new Endereco()
+        {
+            Id = Id,
+            Cep = Cep,
+            Numero = Numero,
+            Rua = Rua,
+            Bairro = Bairro,
+            Cidade = Cidade,
+            Estado = Estado
+        };
     }
 }

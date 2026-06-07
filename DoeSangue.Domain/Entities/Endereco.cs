@@ -10,6 +10,7 @@ public class Endereco
     public string Cidade { get; set; } = string.Empty;
     public string Estado { get; set; } = string.Empty;
 
+    public Endereco() { }
     private Endereco(Guid id, string cep, string numero, string rua, string bairro, string cidade, string estado)
     {
         Id = id;

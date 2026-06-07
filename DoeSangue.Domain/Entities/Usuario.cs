@@ -13,7 +13,8 @@ public class Usuario
     public DateTime? AtualizadoEm { get; set; }
 
     public Endereco? Endereco { get; set; }
-
+    
+    public Usuario() { }
     private Usuario(Guid id, string email, UsuarioRole role, DateTime criadoEm, DateTime? atualizadoEm, Endereco? endereco)
     {
         Id = id;

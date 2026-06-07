@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DoeSangue.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace DoeSangue.Infrastructure.Models
 {
@@ -9,5 +10,16 @@ namespace DoeSangue.Infrastructure.Models
 
         public Guid EnderecoId { get; set; }
         public EnderecoModel? Endereco { get; set; }
+
+        public Usuario ToDomain()
+        {
+            return new Usuario
+            {
+                Id = Id,
+                AtualizadoEm = AtualizadoEm,
+                CriadoEm = CriadoEm,
+                Email = Email
+            };
+        }
     }
 }
