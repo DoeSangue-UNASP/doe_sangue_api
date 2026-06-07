@@ -30,9 +30,18 @@ namespace DoeSangue.Infrastructure.Repository
 
         public async Task<Usuario?> BuscarPorId(Guid usuarioId)
         {
-            var usuario = await _userManager.FindByIdAsync(usuarioId.ToString());
+            var usuarioModel = await _userManager.FindByIdAsync(usuarioId.ToString());
 
-            return usuario?.ToDomain();
+            if (usuarioModel is null) return null;
+
+            var usuario = usuarioModel.ToDomain();
+
+            var enderecoModel = await _context.Enderecos.FirstOrDefaultAsync(x => x.Id == usuarioModel.EnderecoId);
+            var endereco = enderecoModel?.ToDomain();
+
+            usuario.AdicionarEndereco(endereco);
+
+            return usuario;
         }
 
         public async Task Criar(Usuario usuario, string password)

@@ -10,11 +10,13 @@ namespace DoeSangue.API.Controllers.Doadores
     {
         private readonly CriarDoadorUseCase _criarDoadorUseCase;
         private readonly BuscarDoadorPorId _buscarDoadorPorId;
+        private readonly ExcluirDoadorPorUsuarioId _excluirDoadorPorUsuarioId;
 
-        public DoadorController(CriarDoadorUseCase criarDoadorUseCase, BuscarDoadorPorId buscarDoadorPorUsuarioId)
+        public DoadorController(CriarDoadorUseCase criarDoadorUseCase, BuscarDoadorPorId buscarDoadorPorUsuarioId, ExcluirDoadorPorUsuarioId excluirDoadorPorUsuarioId)
         {
             _criarDoadorUseCase = criarDoadorUseCase;
             _buscarDoadorPorId = buscarDoadorPorUsuarioId;
+            _excluirDoadorPorUsuarioId = excluirDoadorPorUsuarioId;
         }
 
         [HttpPost]
@@ -48,6 +50,21 @@ namespace DoeSangue.API.Controllers.Doadores
                 }
 
                 return Ok(doador);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpDelete("{usuarioId}")]
+        public async Task<IActionResult> Remover(Guid usuarioId)
+        {
+            try
+            {
+                await _excluirDoadorPorUsuarioId.Executar(usuarioId);
+
+                return NoContent();
             }
             catch (Exception exception)
             {

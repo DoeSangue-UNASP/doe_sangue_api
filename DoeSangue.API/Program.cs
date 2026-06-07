@@ -26,6 +26,7 @@ builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
 builder.Services.AddScoped<CriarDoadorUseCase>();
 builder.Services.AddScoped<BuscarDoadorPorId>();
+builder.Services.AddScoped<ExcluirDoadorPorUsuarioId>();
 
 builder.Services.AddSwaggerGen(c =>
 {

@@ -44,4 +44,6 @@ public class Usuario
         if (Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") == false)
             throw new ArgumentException("O email do usuário é inválido.");
     }
+
+    public void AdicionarEndereco(Endereco endereco) => Endereco = endereco;
 }
