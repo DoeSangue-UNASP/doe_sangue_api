@@ -1,4 +1,5 @@
 using DoeSangue.Application.UseCases.Doadores;
+using DoeSangue.Application.UseCases.Hemocentros;
 using DoeSangue.Domain.Enums;
 using DoeSangue.Domain.Interfaces;
 using DoeSangue.Infrastructure.Data;
@@ -22,12 +23,15 @@ builder.Services.AddIdentity<UsuarioIdentity, IdentityRole<Guid>>()
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IDoadorRepository, DoadorRepository>();
+builder.Services.AddScoped<IHemocentroRepository, HemocentroRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
 builder.Services.AddScoped<CriarDoadorUseCase>();
 builder.Services.AddScoped<BuscarDoadorPorId>();
 builder.Services.AddScoped<ExcluirDoadorPorUsuarioId>();
 builder.Services.AddScoped<AtualizarDoadorPorId>();
+
+builder.Services.AddScoped<CriarHemocentroUseCase>();
 
 builder.Services.AddSwaggerGen(c =>
 {

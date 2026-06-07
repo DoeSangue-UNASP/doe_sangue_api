@@ -11,6 +11,8 @@ public class Hemocentro
 
     public Usuario Usuario { get; set; }
 
+    public Hemocentro() { }
+
     private Hemocentro(Guid id, string cnpj, string site, string nomeFantasia, DateTime abreEm, DateTime fechaEm, Usuario usuario)
     {
         Id = id;
@@ -51,4 +53,6 @@ public class Hemocentro
         if (Usuario == null)
             throw new ArgumentException("O usuário associado ao hemocentro é obrigatório.");
     }
+
+    public void AdicionarUsuario(Usuario usuario) => Usuario = usuario;
 }

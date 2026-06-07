@@ -1,4 +1,6 @@
-﻿namespace DoeSangue.Infrastructure.Models;
+﻿using DoeSangue.Domain.Entities;
+
+namespace DoeSangue.Infrastructure.Models;
 
 public class HemocentroModel
 {
@@ -22,5 +24,29 @@ public class HemocentroModel
         AbreEm = abreEm;
         FechaEm = fechaEm;
         UsuarioId = usuarioId;
+    }
+
+    public HemocentroModel(Hemocentro hemocentro)
+    {
+        Id = hemocentro.Id;
+        Cnpj = hemocentro.Cnpj;
+        Site = hemocentro.Site;
+        NomeFantasia = hemocentro.NomeFantasia;
+        AbreEm = hemocentro.AbreEm;
+        FechaEm = hemocentro.FechaEm;
+        UsuarioId = hemocentro.Usuario.Id;
+    }
+
+    public Hemocentro ToDomain()
+    {
+        return new Hemocentro
+        {
+            Id = Id,
+            Cnpj = Cnpj,
+            Site = Site,
+            NomeFantasia = NomeFantasia,
+            AbreEm = AbreEm,
+            FechaEm = FechaEm
+        };
     }
 }
