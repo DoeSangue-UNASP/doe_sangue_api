@@ -1,3 +1,7 @@
+﻿using System.Security.Claims;
+using System.Text;
+using DoeSangue.Application.UseCases.Autenticacao;
+using DoeSangue.Application.UseCases.Depoimentos;
 using DoeSangue.Application.UseCases.Doadores;
 using DoeSangue.Application.UseCases.Hemocentros;
 using DoeSangue.Domain.Enums;
@@ -5,8 +9,12 @@ using DoeSangue.Domain.Interfaces;
 using DoeSangue.Infrastructure.Data;
 using DoeSangue.Infrastructure.Models;
 using DoeSangue.Infrastructure.Repository;
+using DoeSangue.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,35 +22,73 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("Database");
+var jwtSecret = builder.Configuration["JwtSettings:SecretKey"] ?? throw new InvalidOperationException("JWT secret key is not configured.");
+var jwtIssuer = builder.Configuration["JwtSettings:Issuer"] ?? "DoeSangue.API";
+var jwtAudience = builder.Configuration["JwtSettings:Audience"] ?? "DoeSangue.Client";
 
 builder.Services.AddDbContext<DoeSangueContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<UsuarioIdentity, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<DoeSangueContext>()
-                .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<DoeSangueContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        RoleClaimType = ClaimTypes.Role,
+        NameClaimType = ClaimTypes.NameIdentifier,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IDoadorRepository, DoadorRepository>();
 builder.Services.AddScoped<IHemocentroRepository, HemocentroRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+builder.Services.AddScoped<IDepoimentoRepository, DepoimentoRepository>();
+builder.Services.AddScoped<IAuthenticationService, AuthService>();
 
+builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<CriarDoadorUseCase>();
 builder.Services.AddScoped<BuscarDoadorPorId>();
 builder.Services.AddScoped<ExcluirDoadorPorUsuarioId>();
 builder.Services.AddScoped<AtualizarDoadorPorId>();
-
 builder.Services.AddScoped<CriarHemocentroUseCase>();
+builder.Services.AddScoped<CriarDepoimentoUseCase>();
+builder.Services.AddScoped<BuscarDepoimentosUseCase>();
 
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "DoeSangue.API", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "Autorização JWT usando o esquema Bearer. \r\n\r\nInsira 'Bearer' [space] e seu token logo em seguida.\r\n\r\n Exemplo: 'Bearer 12345abcdef'",
+        Description = "Autorização JWT usando o esquema Bearer. \r\n\r\nInsira 'Bearer' [space] e seu token logo em seguida.\r\n\r\n Exemplo: 'Bearer {token}'",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
     });
 });
 
@@ -56,6 +102,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

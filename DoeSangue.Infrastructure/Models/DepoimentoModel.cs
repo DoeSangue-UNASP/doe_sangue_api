@@ -1,4 +1,6 @@
-﻿namespace DoeSangue.Infrastructure.Models;
+using DoeSangue.Domain.Entities;
+
+namespace DoeSangue.Infrastructure.Models;
 
 public class DepoimentoModel
 {
@@ -21,5 +23,18 @@ public class DepoimentoModel
         CriadoEm = criadoEm;
         AtualizadoEm = atualizadoEm;
         AutorId = autorId;
+    }
+
+    public Depoimento ToDomain()
+    {
+        return new Depoimento
+        {
+            Id = Id,
+            Titulo = Titulo,
+            Conteudo = Conteudo,
+            CriadoEm = CriadoEm,
+            AtualizadoEm = AtualizadoEm,
+            Autor = Autor?.ToDomain() ?? new Usuario { Id = AutorId }
+        };
     }
 }

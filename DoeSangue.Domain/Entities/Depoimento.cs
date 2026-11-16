@@ -11,6 +11,8 @@ public class Depoimento
     // Autor do depoimento: qualquer Usuario (hemocentro, doador ou outro papel); associação sempre via Usuario.
     public Usuario Autor { get; set; }
 
+    public Depoimento() { }
+
     private Depoimento(Guid id, string titulo, string conteudo, DateTime criadoEm, DateTime? atualizadoEm, Usuario autor)
     {
         Id = id;
