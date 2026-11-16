@@ -4,6 +4,8 @@ namespace DoeSangue.Domain.Entities;
 
 public class BolsaSangue
 {
+    public BolsaSangue() { }
+
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Codigo { get; set; } = string.Empty;
     public string TesteSorologico { get; set; } = string.Empty;

@@ -4,6 +4,8 @@ namespace DoeSangue.Domain.Entities;
 
 public class Agendamento
 {
+    public Agendamento() { }
+
     public Guid Id { get; set; } = Guid.NewGuid();
     public DateTime? AtualizadoEm { get; set; }
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;

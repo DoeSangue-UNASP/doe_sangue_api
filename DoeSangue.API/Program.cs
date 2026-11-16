@@ -1,6 +1,8 @@
 ﻿using System.Security.Claims;
 using System.Text;
+using DoeSangue.Application.UseCases.Agendamentos;
 using DoeSangue.Application.UseCases.Autenticacao;
+using DoeSangue.Application.UseCases.BolsasSangue;
 using DoeSangue.Application.UseCases.Depoimentos;
 using DoeSangue.Application.UseCases.Doadores;
 using DoeSangue.Application.UseCases.Hemocentros;
@@ -67,6 +69,8 @@ builder.Services.AddScoped<IDoadorRepository, DoadorRepository>();
 builder.Services.AddScoped<IHemocentroRepository, HemocentroRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<IDepoimentoRepository, DepoimentoRepository>();
+builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
+builder.Services.AddScoped<IBolsaSangueRepository, BolsaSangueRepository>();
 builder.Services.AddScoped<IAuthenticationService, AuthService>();
 
 builder.Services.AddScoped<LoginUseCase>();
@@ -77,6 +81,8 @@ builder.Services.AddScoped<AtualizarDoadorPorId>();
 builder.Services.AddScoped<CriarHemocentroUseCase>();
 builder.Services.AddScoped<CriarDepoimentoUseCase>();
 builder.Services.AddScoped<BuscarDepoimentosUseCase>();
+builder.Services.AddScoped<CriarAgendamentoUseCase>();
+builder.Services.AddScoped<CriarBolsaSangueUseCase>();
 
 builder.Services.AddSwaggerGen(c =>
 {
