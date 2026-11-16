@@ -50,6 +50,9 @@ public class Hemocentro
         if (string.IsNullOrWhiteSpace(NomeFantasia))
             throw new ArgumentException("O nome fantasia é obrigatório.");
 
+        if (AbreEm.TimeOfDay == FechaEm.TimeOfDay)
+            throw new ArgumentException("O horário de abertura e fechamento do hemocentro não pode ser igual.");
+
         if (Usuario == null)
             throw new ArgumentException("O usuário associado ao hemocentro é obrigatório.");
     }

@@ -62,6 +62,20 @@ namespace DoeSangue.Infrastructure.Repository
             return hemocentro;
         }
 
+        public async Task<Hemocentro?> BuscarPorUsuarioId(Guid usuarioId)
+        {
+            var hemocentroModel = await _context.Hemocentros
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UsuarioId == usuarioId);
+
+            if (hemocentroModel is null)
+            {
+                return null;
+            }
+
+            return await BuscarPorId(hemocentroModel.Id);
+        }
+
         public async Task Criar(Hemocentro hemocentro)
         {
             var hemocentroModel = new HemocentroModel(hemocentro);

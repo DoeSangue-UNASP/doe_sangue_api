@@ -1,5 +1,6 @@
 using DoeSangue.Application.Dtos.BolsasSangue;
 using DoeSangue.Domain.Entities;
+using DoeSangue.Domain.Enums;
 using DoeSangue.Domain.Interfaces;
 
 namespace DoeSangue.Application.UseCases.BolsasSangue
@@ -15,12 +16,22 @@ namespace DoeSangue.Application.UseCases.BolsasSangue
             _agendamentoRepository = agendamentoRepository;
         }
 
-        public async Task Executar(CriarBolsaSangueDto dto)
+        public async Task Executar(Guid usuarioId, CriarBolsaSangueDto dto)
         {
             var agendamento = await _agendamentoRepository.BuscarPorId(dto.AgendamentoId);
             if (agendamento is null)
             {
                 throw new ArgumentException("Agendamento inexistente.");
+            }
+
+            if (agendamento.Hemocentro.Usuario?.Id != usuarioId)
+            {
+                throw new UnauthorizedAccessException("O usuário não pode cadastrar uma bolsa para este agendamento.");
+            }
+
+            if (agendamento.Status != StatusAgendamento.CONCLUIDO)
+            {
+                throw new ArgumentException("A bolsa só pode ser cadastrada após a conclusão do agendamento.");
             }
 
             var bolsa = BolsaSangue.Criar(

@@ -17,7 +17,7 @@ namespace DoeSangue.Application.UseCases.Agendamentos
             _hemocentroRepository = hemocentroRepository;
         }
 
-        public async Task Executar(CriarAgendamentoDto dto)
+        public async Task Executar(Guid usuarioId, CriarAgendamentoDto dto)
         {
             var doador = await _doadorRepository.BuscarPorId(dto.DoadorId);
             if (doador is null)
@@ -25,10 +25,33 @@ namespace DoeSangue.Application.UseCases.Agendamentos
                 throw new ArgumentException("Doador inexistente.");
             }
 
+            if (doador.Usuario is null || doador.Usuario.Id != usuarioId)
+            {
+                throw new UnauthorizedAccessException("O agendamento deve ser criado pelo próprio doador.");
+            }
+
             var hemocentro = await _hemocentroRepository.BuscarPorId(dto.HemocentroId);
             if (hemocentro is null)
             {
                 throw new ArgumentException("Hemocentro inexistente.");
+            }
+
+            var horario = dto.AgendadoPara.TimeOfDay;
+            var abertura = hemocentro.AbreEm.TimeOfDay;
+            var fechamento = hemocentro.FechaEm.TimeOfDay;
+            var horarioDisponivel = fechamento != abertura &&
+                (fechamento > abertura
+                    ? horario >= abertura && horario < fechamento
+                    : horario >= abertura || horario < fechamento);
+
+            if (!horarioDisponivel)
+            {
+                throw new ArgumentException("O horário solicitado está fora do horário de funcionamento do hemocentro.");
+            }
+
+            if (await _agendamentoRepository.ExisteAgendamentoAtivo(hemocentro.Id, dto.AgendadoPara))
+            {
+                throw new ArgumentException("Já existe um agendamento ativo para esse horário.");
             }
 
             var agendamento = Agendamento.Criar(dto.AgendadoPara, hemocentro, doador);

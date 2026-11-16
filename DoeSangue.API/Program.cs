@@ -76,13 +76,23 @@ builder.Services.AddScoped<IAuthenticationService, AuthService>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<CriarDoadorUseCase>();
 builder.Services.AddScoped<BuscarDoadorPorId>();
+builder.Services.AddScoped<BuscarDoadorPorUsuarioIdUseCase>();
+builder.Services.AddScoped<BuscarTodosDoadoresUseCase>();
 builder.Services.AddScoped<ExcluirDoadorPorUsuarioId>();
 builder.Services.AddScoped<AtualizarDoadorPorId>();
 builder.Services.AddScoped<CriarHemocentroUseCase>();
+builder.Services.AddScoped<BuscarHemocentroPorUsuarioIdUseCase>();
 builder.Services.AddScoped<CriarDepoimentoUseCase>();
 builder.Services.AddScoped<BuscarDepoimentosUseCase>();
 builder.Services.AddScoped<CriarAgendamentoUseCase>();
+builder.Services.AddScoped<BuscarAgendamentosDoadorUseCase>();
+builder.Services.AddScoped<BuscarAgendaHemocentroUseCase>();
+builder.Services.AddScoped<CancelarAgendamentoUseCase>();
+builder.Services.AddScoped<ConcluirAgendamentoUseCase>();
 builder.Services.AddScoped<CriarBolsaSangueUseCase>();
+builder.Services.AddScoped<BuscarBolsasSangueUseCase>();
+builder.Services.AddScoped<BuscarBolsaSangueUseCase>();
+builder.Services.AddScoped<AtualizarStatusBolsaUseCase>();
 
 builder.Services.AddSwaggerGen(c =>
 {

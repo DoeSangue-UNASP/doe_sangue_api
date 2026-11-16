@@ -52,4 +52,25 @@ public class Agendamento
         if (Doador == null)
             throw new ArgumentException("O doador é obrigatório.");
     }
+
+    public void Cancelar()
+    {
+        if (Status != StatusAgendamento.AGENDADO)
+            throw new ArgumentException("Somente agendamentos ativos podem ser cancelados.");
+
+        Status = StatusAgendamento.CANCELADO;
+        AtualizadoEm = DateTime.UtcNow;
+    }
+
+    public void Concluir()
+    {
+        if (Status != StatusAgendamento.AGENDADO)
+            throw new ArgumentException("Somente agendamentos ativos podem ser concluídos.");
+
+        if (AgendadoPara > DateTime.UtcNow)
+            throw new ArgumentException("O agendamento não pode ser concluído antes do horário marcado.");
+
+        Status = StatusAgendamento.CONCLUIDO;
+        AtualizadoEm = DateTime.UtcNow;
+    }
 }

@@ -62,6 +62,68 @@ namespace DoeSangue.Infrastructure.Repository
             return doador;
         }
 
+        public async Task<Doador?> BuscarPorUsuarioId(Guid usuarioId)
+        {
+            var doadorModel = await _context.Doadores
+                .AsNoTracking()
+                .FirstOrDefaultAsync(d => d.UsuarioId == usuarioId);
+
+            if (doadorModel is null)
+            {
+                return null;
+            }
+
+            var doador = doadorModel.ToDomain();
+            var usuarioModel = await _userManager.FindByIdAsync(usuarioId.ToString());
+
+            if (usuarioModel is null)
+            {
+                throw new InvalidOperationException("Usuário associado ao doador não foi encontrado.");
+            }
+
+            doador.AdicionarUsuario(usuarioModel.ToDomain());
+            return doador;
+        }
+
+        public async Task<Doador?> BuscarPorIdDoHemocentro(Guid doadorId, Guid usuarioHemocentroId)
+        {
+            var doadorModel = await _context.Doadores
+                .AsNoTracking()
+                .FirstOrDefaultAsync(d =>
+                    d.Id == doadorId &&
+                    _context.Agendamentos.Any(a =>
+                        a.DoadorId == d.Id &&
+                        a.Hemocentro.UsuarioId == usuarioHemocentroId));
+
+            if (doadorModel is null)
+            {
+                return null;
+            }
+
+            var doador = doadorModel.ToDomain();
+            var usuarioModel = await _userManager.FindByIdAsync(doadorModel.UsuarioId.ToString());
+            if (usuarioModel is null)
+            {
+                throw new InvalidOperationException("Usuário associado ao doador não foi encontrado.");
+            }
+
+            doador.AdicionarUsuario(usuarioModel.ToDomain());
+            return doador;
+        }
+
+        public async Task<List<Doador>> BuscarTodosDoHemocentro(Guid usuarioHemocentroId)
+        {
+            var models = await _context.Doadores
+                .Where(d => _context.Agendamentos.Any(a =>
+                    a.DoadorId == d.Id &&
+                    a.Hemocentro.UsuarioId == usuarioHemocentroId))
+                .AsNoTracking()
+                .OrderBy(x => x.Nome)
+                .ToListAsync();
+
+            return models.Select(x => x.ToDomain()).ToList();
+        }
+
         public async Task Criar(Doador doador)
         {
             var doadorModel = new DoadorModel(doador);

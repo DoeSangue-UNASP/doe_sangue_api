@@ -18,10 +18,18 @@ namespace DoeSangue.Application.UseCases.Doadores
         public async Task Executar(Guid usuarioId)
         {
             var usuario = await _usuarioRepository.BuscarPorId(usuarioId);
-            var enderecoId = usuario.Endereco.Id;
+            if (usuario is null)
+            {
+                throw new ArgumentException("Usuário inexistente.");
+            }
 
             await _doadorRepository.Remover(usuarioId);
-            await _enderecoRepository.Remover(enderecoId);
+
+            if (usuario.Endereco is not null)
+            {
+                await _enderecoRepository.Remover(usuario.Endereco.Id);
+            }
+
             await _usuarioRepository.Remover(usuarioId);
         }
     }

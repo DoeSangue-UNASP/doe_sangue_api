@@ -12,11 +12,9 @@ namespace DoeSangue.Application.UseCases.Doadores
             _doadorRepository = doadorRepository;
         }
 
-        public async Task<Doador?> Executar(Guid doadorId)
+        public async Task<Doador?> Executar(Guid doadorId, Guid usuarioHemocentroId)
         {
-            var doador = await _doadorRepository.BuscarPorId(doadorId);
-
-            return doador;
+            return await _doadorRepository.BuscarPorIdDoHemocentro(doadorId, usuarioHemocentroId);
         }
     }
 }

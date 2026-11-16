@@ -34,27 +34,30 @@ namespace DoeSangue.Infrastructure.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<BolsaSangue>> BuscarTodos()
+        public async Task<List<BolsaSangue>> BuscarPorUsuarioHemocentro(Guid usuarioId)
         {
             var models = await _context.BolsasSangue
                 .Include(x => x.Agendamento)
                 .ThenInclude(x => x.Doador)
                 .Include(x => x.Agendamento)
                 .ThenInclude(x => x.Hemocentro)
+                .Where(x => x.Agendamento.Hemocentro.UsuarioId == usuarioId)
                 .AsNoTracking()
                 .ToListAsync();
 
             return models.Select(MapToDomain).ToList();
         }
 
-        public async Task<BolsaSangue?> BuscarPorId(Guid bolsaId)
+        public async Task<BolsaSangue?> BuscarPorId(Guid bolsaId, Guid usuarioId)
         {
             var model = await _context.BolsasSangue
                 .Include(x => x.Agendamento)
                 .ThenInclude(x => x.Doador)
                 .Include(x => x.Agendamento)
                 .ThenInclude(x => x.Hemocentro)
-                .FirstOrDefaultAsync(x => x.Id == bolsaId);
+                .FirstOrDefaultAsync(x =>
+                    x.Id == bolsaId &&
+                    x.Agendamento.Hemocentro.UsuarioId == usuarioId);
 
             if (model is null)
             {
@@ -62,6 +65,21 @@ namespace DoeSangue.Infrastructure.Repository
             }
 
             return MapToDomain(model);
+        }
+
+        public async Task Atualizar(BolsaSangue bolsaSangue)
+        {
+            var model = await _context.BolsasSangue
+                .FirstOrDefaultAsync(x => x.Id == bolsaSangue.Id);
+
+            if (model is null)
+            {
+                throw new ArgumentException("Bolsa de sangue inexistente.");
+            }
+
+            model.Status = bolsaSangue.Status;
+            model.AtualizadoEm = bolsaSangue.AtualizadoEm;
+            await _context.SaveChangesAsync();
         }
 
         private static BolsaSangue MapToDomain(BolsaSangueModel model)

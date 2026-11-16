@@ -92,4 +92,22 @@ public class BolsaSangue
         if (Agendamento == null)
             throw new ArgumentException("O agendamento associado é obrigatório.");
     }
+
+    public void AtualizarStatus(StatusBolsa novoStatus)
+    {
+        var transicaoPermitida = Status switch
+        {
+            StatusBolsa.EM_ANALISE => novoStatus is StatusBolsa.DISPONIVEL or StatusBolsa.DESCARTADA or StatusBolsa.VENCIDA,
+            StatusBolsa.DISPONIVEL => novoStatus is StatusBolsa.DESCARTADA or StatusBolsa.VENCIDA,
+            _ => false
+        };
+
+        if (!transicaoPermitida)
+        {
+            throw new ArgumentException($"Não é permitido alterar o status de {Status} para {novoStatus}.");
+        }
+
+        Status = novoStatus;
+        AtualizadoEm = DateTime.UtcNow;
+    }
 }
