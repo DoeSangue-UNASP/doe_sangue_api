@@ -16,5 +16,10 @@ namespace DoeSangue.Application.UseCases.Depoimentos
         {
             return await _depoimentoRepository.BuscarTodos();
         }
+
+        public Task<List<Depoimento>> ExecutarPublicos()
+        {
+            return _depoimentoRepository.BuscarDezMaisRecentes();
+        }
     }
 }

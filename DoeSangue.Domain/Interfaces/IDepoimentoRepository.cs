@@ -6,6 +6,7 @@ namespace DoeSangue.Domain.Interfaces
     {
         Task Criar(Depoimento depoimento);
         Task<List<Depoimento>> BuscarTodos();
+        Task<List<Depoimento>> BuscarDezMaisRecentes();
         Task<Depoimento?> BuscarPorId(Guid depoimentoId);
     }
 }

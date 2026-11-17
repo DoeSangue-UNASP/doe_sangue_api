@@ -51,6 +51,24 @@ namespace DoeSangue.Infrastructure.Repository
                 .OrderByDescending(x => x.CriadoEm)
                 .ToListAsync();
 
+            return Mapear(models);
+        }
+
+        public async Task<List<Depoimento>> BuscarDezMaisRecentes()
+        {
+            var models = await _context.Depoimentos
+                .AsNoTracking()
+                .Include(x => x.Autor)
+                .OrderByDescending(x => x.CriadoEm)
+                .ThenBy(x => x.Id)
+                .Take(10)
+                .ToListAsync();
+
+            return Mapear(models);
+        }
+
+        private static List<Depoimento> Mapear(IEnumerable<DepoimentoModel> models)
+        {
             var depoimentos = new List<Depoimento>();
 
             foreach (var model in models)

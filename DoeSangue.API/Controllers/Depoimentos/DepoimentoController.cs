@@ -4,6 +4,7 @@ using DoeSangue.Application.UseCases.Depoimentos;
 using DoeSangue.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace DoeSangue.API.Controllers.Depoimentos
 {
@@ -57,6 +58,21 @@ namespace DoeSangue.API.Controllers.Depoimentos
                 d.CriadoEm,
                 AutorEmail = d.Autor?.Email,
                 AutorId = d.Autor?.Id
+            }));
+        }
+
+        [HttpGet("publico")]
+        [AllowAnonymous]
+        [EnableRateLimiting("DepoimentosPublicos")]
+        public async Task<IActionResult> BuscarDezPublicos()
+        {
+            var depoimentos = await _buscarDepoimentosUseCase.ExecutarPublicos();
+            return Ok(depoimentos.Select(d => new
+            {
+                d.Id,
+                d.Titulo,
+                d.Conteudo,
+                d.CriadoEm
             }));
         }
     }

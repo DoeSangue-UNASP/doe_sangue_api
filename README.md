@@ -23,6 +23,11 @@ Podemos ter as controllers, exception filters etc.
 
 Os cadastros de doador e hemocentro e o login são públicos. Os demais fluxos abaixo exigem JWT Bearer e autorização por perfil.
 
+### Depoimentos
+
+- `GET /api/Depoimento/publico`: endpoint anônimo que retorna até os 10 depoimentos mais recentes, sem expor o e-mail do autor. Limite de 1 requisição por segundo por IP; excedentes recebem `429 Too Many Requests`.
+- `GET /api/Depoimento` e `POST /api/Depoimento`: exigem autenticação JWT.
+
 ### Doador
 
 - `GET /api/Doador/me`: consultar o próprio perfil.
@@ -36,7 +41,7 @@ Os cadastros de doador e hemocentro e o login são públicos. Os demais fluxos a
 
 - `GET /api/Hemocentro/me`: consultar o próprio perfil.
 - `GET /api/Doador` e `GET /api/Doador/{id}`: consultar doadores que tenham agendamento vinculado ao próprio hemocentro.
-- `GET /api/Agendamento/hemocentro`: consultar a agenda do próprio hemocentro; aceita os filtros opcionais `data` (`yyyy-MM-dd`) e `documento` (CPF).
+- `GET /api/Agendamento/hemocentro`: consultar a agenda do próprio hemocentro; aceita o filtro opcional `data` (`yyyy-MM-dd`) na query string e `documento` (CPF) no header HTTP `documento`.
 - `PATCH /api/Agendamento/{id}/cancelar` e `PATCH /api/Agendamento/{id}/concluir`: gerir os próprios agendamentos.
 - `POST /api/BolsaSangue`: cadastrar bolsa somente para agendamento concluído do próprio hemocentro.
 - `GET /api/BolsaSangue/hemocentro`: consultar bolsas e resumo do estoque por status.
