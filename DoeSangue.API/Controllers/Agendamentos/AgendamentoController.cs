@@ -77,7 +77,9 @@ namespace DoeSangue.API.Controllers.Agendamentos
 
         [HttpGet("hemocentro")]
         [Authorize(Roles = nameof(UsuarioRole.HEMOCENTRO))]
-        public async Task<IActionResult> BuscarDoHemocentro([FromQuery] DateOnly? data, [FromQuery] string? documento)
+        public async Task<IActionResult> BuscarDoHemocentro(
+            [FromQuery] DateOnly? data,
+            [FromHeader(Name = "documento")] string? documento)
         {
             if (!ObterUsuarioId(out var usuarioId))
             {
