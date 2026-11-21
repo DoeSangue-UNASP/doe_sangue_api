@@ -81,7 +81,7 @@ namespace DoeSangue.API.Controllers.Doadores
             }
 
             var doador = await _buscarDoadorPorUsuarioIdUseCase.Executar(usuarioId);
-            return doador is null ? NotFound() : Ok(MapearDoador(doador));
+            return doador is null ? NotFound() : Ok(MapearMeuPerfil(doador));
         }
 
         [HttpGet("{doadorId:guid}")]
@@ -152,6 +152,30 @@ namespace DoeSangue.API.Controllers.Doadores
         private bool ObterUsuarioId(out Guid usuarioId)
         {
             return Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out usuarioId);
+        }
+
+        private static object MapearMeuPerfil(Doador doador)
+        {
+            var endereco = doador.Usuario?.Endereco;
+
+            return new
+            {
+                doador.Id,
+                doador.Nome,
+                doador.Documento,
+                doador.Telefone,
+                doador.DataNascimento,
+                Email = doador.Usuario?.Email,
+                Endereco = endereco is null ? null : new
+                {
+                    endereco.Cep,
+                    endereco.Numero,
+                    endereco.Rua,
+                    endereco.Bairro,
+                    endereco.Cidade,
+                    endereco.Estado
+                }
+            };
         }
 
         private static object MapearDoador(Doador doador)

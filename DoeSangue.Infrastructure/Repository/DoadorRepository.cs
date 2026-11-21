@@ -52,7 +52,7 @@ namespace DoeSangue.Infrastructure.Repository
                 var usuarioModel = await _userManager.FindByIdAsync(doadorModel.UsuarioId.ToString());
                 if (usuarioModel is not null)
                 {
-                    doador.AdicionarUsuario(usuarioModel.ToDomain());
+                    doador.AdicionarUsuario(await MapearUsuarioComEndereco(usuarioModel));
                 }
             }
 
@@ -87,8 +87,23 @@ namespace DoeSangue.Infrastructure.Repository
                 throw new InvalidOperationException("Usuário associado ao doador não foi encontrado.");
             }
 
-            doador.AdicionarUsuario(usuarioModel.ToDomain());
+            doador.AdicionarUsuario(await MapearUsuarioComEndereco(usuarioModel));
             return doador;
+        }
+
+        private async Task<Usuario> MapearUsuarioComEndereco(UsuarioIdentity usuarioModel)
+        {
+            var usuario = usuarioModel.ToDomain();
+            var enderecoModel = await _context.Enderecos
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == usuarioModel.EnderecoId);
+
+            if (enderecoModel is not null)
+            {
+                usuario.AdicionarEndereco(enderecoModel.ToDomain());
+            }
+
+            return usuario;
         }
 
         public async Task<Doador?> BuscarPorIdDoHemocentro(Guid doadorId, Guid usuarioHemocentroId)

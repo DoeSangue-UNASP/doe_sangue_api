@@ -30,6 +30,25 @@ namespace DoeSangue.Infrastructure.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task Atualizar(Endereco endereco)
+        {
+            var enderecoModel = await _context.Enderecos.FirstOrDefaultAsync(e => e.Id == endereco.Id);
+
+            if (enderecoModel is null)
+            {
+                throw new ArgumentException("Endereço inexistente");
+            }
+
+            enderecoModel.Cep = endereco.Cep;
+            enderecoModel.Numero = endereco.Numero;
+            enderecoModel.Rua = endereco.Rua;
+            enderecoModel.Bairro = endereco.Bairro;
+            enderecoModel.Cidade = endereco.Cidade;
+            enderecoModel.Estado = endereco.Estado;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task Remover(Guid enderecoId)
         {
             var enderecoModel = await _context.Enderecos.FirstOrDefaultAsync(e => e.Id == enderecoId);

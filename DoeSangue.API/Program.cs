@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using DoeSangue.Application.UseCases.Agendamentos;
 using DoeSangue.Application.UseCases.Autenticacao;
@@ -22,7 +23,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("Database");
