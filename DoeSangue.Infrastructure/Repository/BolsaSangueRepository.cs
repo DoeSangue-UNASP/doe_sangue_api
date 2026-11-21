@@ -53,6 +53,20 @@ namespace DoeSangue.Infrastructure.Repository
             return models.Select(MapToDomain).ToList();
         }
 
+        public async Task<List<BolsaSangue>> BuscarPorUsuarioDoador(Guid usuarioId)
+        {
+            var models = await _context.BolsasSangue
+                .Include(x => x.Agendamento)
+                .ThenInclude(x => x.Doador)
+                .Include(x => x.Agendamento)
+                .ThenInclude(x => x.Hemocentro)
+                .Where(x => x.Agendamento.Doador.UsuarioId == usuarioId)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return models.Select(MapToDomain).ToList();
+        }
+
         public async Task<BolsaSangue?> BuscarPorId(Guid bolsaId, Guid usuarioId)
         {
             var model = await _context.BolsasSangue

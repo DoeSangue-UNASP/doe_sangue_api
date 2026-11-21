@@ -114,6 +114,7 @@ builder.Services.AddScoped<ReagendarAgendamentoUseCase>();
 builder.Services.AddScoped<ConcluirAgendamentoUseCase>();
 builder.Services.AddScoped<CriarBolsaSangueUseCase>();
 builder.Services.AddScoped<BuscarBolsasSangueUseCase>();
+builder.Services.AddScoped<BuscarBolsasDoadorUseCase>();
 builder.Services.AddScoped<BuscarBolsaSangueUseCase>();
 builder.Services.AddScoped<AtualizarStatusBolsaUseCase>();
 

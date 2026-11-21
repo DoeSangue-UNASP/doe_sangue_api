@@ -16,17 +16,20 @@ namespace DoeSangue.API.Controllers.BolsasSangue
     {
         private readonly CriarBolsaSangueUseCase _criarBolsaSangueUseCase;
         private readonly BuscarBolsasSangueUseCase _buscarBolsasSangueUseCase;
+        private readonly BuscarBolsasDoadorUseCase _buscarBolsasDoadorUseCase;
         private readonly BuscarBolsaSangueUseCase _buscarBolsaSangueUseCase;
         private readonly AtualizarStatusBolsaUseCase _atualizarStatusBolsaUseCase;
 
         public BolsaSangueController(
             CriarBolsaSangueUseCase criarBolsaSangueUseCase,
             BuscarBolsasSangueUseCase buscarBolsasSangueUseCase,
+            BuscarBolsasDoadorUseCase buscarBolsasDoadorUseCase,
             BuscarBolsaSangueUseCase buscarBolsaSangueUseCase,
             AtualizarStatusBolsaUseCase atualizarStatusBolsaUseCase)
         {
             _criarBolsaSangueUseCase = criarBolsaSangueUseCase;
             _buscarBolsasSangueUseCase = buscarBolsasSangueUseCase;
+            _buscarBolsasDoadorUseCase = buscarBolsasDoadorUseCase;
             _buscarBolsaSangueUseCase = buscarBolsaSangueUseCase;
             _atualizarStatusBolsaUseCase = atualizarStatusBolsaUseCase;
         }
@@ -76,6 +79,19 @@ namespace DoeSangue.API.Controllers.BolsasSangue
                     .GroupBy(x => x.Status)
                     .Select(grupo => new { Status = grupo.Key, Quantidade = grupo.Count() })
             });
+        }
+
+        [HttpGet("me")]
+        [Authorize(Roles = nameof(UsuarioRole.DOADOR))]
+        public async Task<IActionResult> BuscarDoDoador()
+        {
+            if (!ObterUsuarioId(out var usuarioId))
+            {
+                return Unauthorized();
+            }
+
+            var bolsas = await _buscarBolsasDoadorUseCase.Executar(usuarioId);
+            return Ok(bolsas.Select(MapearBolsa));
         }
 
         [HttpGet("{bolsaId:guid}")]

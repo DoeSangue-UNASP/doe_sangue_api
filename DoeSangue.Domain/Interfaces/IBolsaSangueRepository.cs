@@ -6,6 +6,7 @@ namespace DoeSangue.Domain.Interfaces
     {
         Task Criar(BolsaSangue bolsaSangue);
         Task<List<BolsaSangue>> BuscarPorUsuarioHemocentro(Guid usuarioId);
+        Task<List<BolsaSangue>> BuscarPorUsuarioDoador(Guid usuarioId);
         Task<BolsaSangue?> BuscarPorId(Guid bolsaId, Guid usuarioId);
         Task Atualizar(BolsaSangue bolsaSangue);
     }
