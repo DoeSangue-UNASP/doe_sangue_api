@@ -92,6 +92,7 @@ builder.Services.AddScoped<IAuthenticationService, AuthService>();
 
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<CriarDoadorUseCase>();
+builder.Services.AddScoped<CadastrarLeadUseCase>();
 builder.Services.AddScoped<BuscarDoadorPorId>();
 builder.Services.AddScoped<BuscarDoadorPorUsuarioIdUseCase>();
 builder.Services.AddScoped<BuscarTodosDoadoresUseCase>();

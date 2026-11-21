@@ -10,6 +10,8 @@ namespace DoeSangue.Domain.Interfaces
         Task<Doador?> BuscarPorUsuarioId(Guid usuarioId);
         Task<Doador?> BuscarPorIdDoHemocentro(Guid doadorId, Guid usuarioHemocentroId);
         Task<List<Doador>> BuscarTodosDoHemocentro(Guid usuarioHemocentroId);
+        Task<List<Doador>> BuscarLeadsEUsuariosDoHemocentro(Guid hemocentroId);
+        Task<List<Doador>?> BuscarPorDocumento(string documento);
         Task Remover(Guid usuarioId);
     }
 }

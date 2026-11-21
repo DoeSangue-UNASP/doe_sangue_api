@@ -23,20 +23,20 @@ namespace DoeSangue.Infrastructure.Repository
             var doadorModel = new DoadorModel(doador);
             var atualizadoEm = DateTime.Now;
 
-            var usuarioModel = await _userManager.FindByIdAsync(doadorModel.UsuarioId.ToString());
-
-            if (usuarioModel is null)
-            {
-                throw new ArgumentException("Usuário inexistente");
-            }
-
             _context.Doadores.Attach(doadorModel);
             _context.Entry(doadorModel).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
 
-            usuarioModel.AtualizadoEm = atualizadoEm;
-            await _userManager.UpdateAsync(usuarioModel);
+            if (doadorModel.UsuarioId.HasValue)
+            {
+                var usuarioModel = await _userManager.FindByIdAsync(doadorModel.UsuarioId.ToString());
+                if (usuarioModel is not null)
+                {
+                    usuarioModel.AtualizadoEm = atualizadoEm;
+                    await _userManager.UpdateAsync(usuarioModel);
+                }
+            }
         }
 
         public async Task<Doador?> BuscarPorId(Guid doadorId)
@@ -47,17 +47,23 @@ namespace DoeSangue.Infrastructure.Repository
             
             var doador = doadorModel.ToDomain();
 
-            var usuarioId = doadorModel.UsuarioId;
-            var usuarioModel = await _userManager.FindByIdAsync(usuarioId.ToString());
-
-            if (usuarioModel is null)
+            if (doadorModel.UsuarioId.HasValue)
             {
-                throw new Exception("Usuário inexistente");
+                var usuarioModel = await _userManager.FindByIdAsync(doadorModel.UsuarioId.ToString());
+                if (usuarioModel is not null)
+                {
+                    doador.AdicionarUsuario(usuarioModel.ToDomain());
+                }
             }
 
-            var usuario = usuarioModel.ToDomain();
-
-            doador.AdicionarUsuario(usuario);
+            if (doadorModel.HemocentroId.HasValue)
+            {
+                var hemocentroModel = await _context.Hemocentros.FirstOrDefaultAsync(h => h.Id == doadorModel.HemocentroId);
+                if (hemocentroModel is not null)
+                {
+                    doador.AdicionarHemocentro(hemocentroModel.ToDomain());
+                }
+            }
 
             return doador;
         }
@@ -101,13 +107,15 @@ namespace DoeSangue.Infrastructure.Repository
             }
 
             var doador = doadorModel.ToDomain();
-            var usuarioModel = await _userManager.FindByIdAsync(doadorModel.UsuarioId.ToString());
-            if (usuarioModel is null)
+            if (doadorModel.UsuarioId.HasValue)
             {
-                throw new InvalidOperationException("Usuário associado ao doador não foi encontrado.");
+                var usuarioModel = await _userManager.FindByIdAsync(doadorModel.UsuarioId.ToString());
+                if (usuarioModel is not null)
+                {
+                    doador.AdicionarUsuario(usuarioModel.ToDomain());
+                }
             }
 
-            doador.AdicionarUsuario(usuarioModel.ToDomain());
             return doador;
         }
 
@@ -122,6 +130,83 @@ namespace DoeSangue.Infrastructure.Repository
                 .ToListAsync();
 
             return models.Select(x => x.ToDomain()).ToList();
+        }
+
+        public async Task<List<Doador>> BuscarLeadsEUsuariosDoHemocentro(Guid hemocentroId)
+        {
+            var models = await _context.Doadores
+                .Where(d => d.HemocentroId == hemocentroId || _context.Agendamentos.Any(a =>
+                    a.DoadorId == d.Id &&
+                    a.Hemocentro.Id == hemocentroId))
+                .AsNoTracking()
+                .OrderBy(x => x.Nome)
+                .ToListAsync();
+
+            var doadores = new List<Doador>();
+            foreach (var model in models)
+            {
+                var doador = model.ToDomain();
+
+                if (model.UsuarioId.HasValue)
+                {
+                    var usuarioModel = await _userManager.FindByIdAsync(model.UsuarioId.ToString());
+                    if (usuarioModel is not null)
+                    {
+                        doador.AdicionarUsuario(usuarioModel.ToDomain());
+                    }
+                }
+
+                if (model.HemocentroId.HasValue)
+                {
+                    var hemocentroModel = await _context.Hemocentros.FirstOrDefaultAsync(h => h.Id == model.HemocentroId);
+                    if (hemocentroModel is not null)
+                    {
+                        doador.AdicionarHemocentro(hemocentroModel.ToDomain());
+                    }
+                }
+
+                doadores.Add(doador);
+            }
+
+            return doadores;
+        }
+
+        public async Task<List<Doador>?> BuscarPorDocumento(string documento)
+        {
+            var models = await _context.Doadores
+                .AsNoTracking()
+                .Where(d => d.Documento == documento)
+                .ToListAsync();
+
+            if (!models.Any()) return null;
+
+            var doadores = new List<Doador>();
+            foreach (var model in models)
+            {
+                var doador = model.ToDomain();
+
+                if (model.UsuarioId.HasValue)
+                {
+                    var usuarioModel = await _userManager.FindByIdAsync(model.UsuarioId.ToString());
+                    if (usuarioModel is not null)
+                    {
+                        doador.AdicionarUsuario(usuarioModel.ToDomain());
+                    }
+                }
+
+                if (model.HemocentroId.HasValue)
+                {
+                    var hemocentroModel = await _context.Hemocentros.FirstOrDefaultAsync(h => h.Id == model.HemocentroId);
+                    if (hemocentroModel is not null)
+                    {
+                        doador.AdicionarHemocentro(hemocentroModel.ToDomain());
+                    }
+                }
+
+                doadores.Add(doador);
+            }
+
+            return doadores;
         }
 
         public async Task Criar(Doador doador)
@@ -146,3 +231,4 @@ namespace DoeSangue.Infrastructure.Repository
         }
     }
 }
+

@@ -9,12 +9,15 @@ public class DoadorModel
     public string Documento { get; set; }
     public string Telefone { get; set; }
     public DateOnly DataNascimento { get; set; }
+    public Guid? UsuarioId { get; set; }
+    public Guid? HemocentroId { get; set; }
 
-    public Guid UsuarioId { get; set; }
-    public UsuarioIdentity Usuario { get; set; }
+    public UsuarioIdentity? Usuario { get; set; }
+    public HemocentroModel? Hemocentro { get; set; }
 
     public DoadorModel() { }
-    public DoadorModel(Guid id, string nome, string documento, string telefone, DateOnly dataNascimento, Guid usuarioId)
+
+    public DoadorModel(Guid id, string nome, string documento, string telefone, DateOnly dataNascimento, Guid? usuarioId, Guid? hemocentroId)
     {
         Id = id;
         Nome = nome;
@@ -22,6 +25,7 @@ public class DoadorModel
         Telefone = telefone;
         DataNascimento = dataNascimento;
         UsuarioId = usuarioId;
+        HemocentroId = hemocentroId;
     }
 
     public DoadorModel(Doador doador)
@@ -31,7 +35,8 @@ public class DoadorModel
         Documento = doador.Documento;
         Telefone = doador.Telefone;
         DataNascimento = doador.DataNascimento;
-        UsuarioId = doador.Usuario.Id;
+        UsuarioId = doador.UsuarioId;
+        HemocentroId = doador.HemocentroId;
     }
 
     public Doador ToDomain()
@@ -42,7 +47,9 @@ public class DoadorModel
             Nome = Nome,
             Documento = Documento,
             Telefone = Telefone,
-            DataNascimento = DataNascimento
+            DataNascimento = DataNascimento,
+            UsuarioId = UsuarioId,
+            HemocentroId = HemocentroId
         };
     }
 }

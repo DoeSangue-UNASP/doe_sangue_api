@@ -3,6 +3,7 @@ using DoeSangue.Application.Dtos.Doador;
 using DoeSangue.Application.UseCases.Doadores;
 using DoeSangue.Domain.Entities;
 using DoeSangue.Domain.Enums;
+using DoeSangue.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace DoeSangue.API.Controllers.Doadores
         private readonly BuscarTodosDoadoresUseCase _buscarTodosDoadoresUseCase;
         private readonly ExcluirDoadorPorUsuarioId _excluirDoadorPorUsuarioId;
         private readonly AtualizarDoadorPorId _atualizarDoadorPorId;
+        private readonly DoeSangueContext _context;
 
         public DoadorController(
             CriarDoadorUseCase criarDoadorUseCase,
@@ -27,7 +29,8 @@ namespace DoeSangue.API.Controllers.Doadores
             BuscarDoadorPorUsuarioIdUseCase buscarDoadorPorUsuarioIdUseCase,
             BuscarTodosDoadoresUseCase buscarTodosDoadoresUseCase,
             ExcluirDoadorPorUsuarioId excluirDoadorPorUsuarioId,
-            AtualizarDoadorPorId atualizarDoadorPorId)
+            AtualizarDoadorPorId atualizarDoadorPorId,
+            DoeSangueContext context)
         {
             _criarDoadorUseCase = criarDoadorUseCase;
             _buscarDoadorPorId = buscarDoadorPorUsuarioId;
@@ -35,24 +38,23 @@ namespace DoeSangue.API.Controllers.Doadores
             _buscarTodosDoadoresUseCase = buscarTodosDoadoresUseCase;
             _excluirDoadorPorUsuarioId = excluirDoadorPorUsuarioId;
             _atualizarDoadorPorId = atualizarDoadorPorId;
+            _context = context;
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Criar([FromBody] CriarDoadorDto doadorDto)
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 await _criarDoadorUseCase.Executar(doadorDto);
+                await transaction.CommitAsync();
                 return Created();
             }
             catch (ArgumentException exception)
             {
                 return StatusCode(StatusCodes.Status422UnprocessableEntity, exception.Message);
-            }
-            catch (Exception exception)
-            {
-                return BadRequest(exception.Message);
             }
         }
 

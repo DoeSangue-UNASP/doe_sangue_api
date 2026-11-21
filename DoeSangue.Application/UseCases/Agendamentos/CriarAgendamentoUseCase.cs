@@ -25,9 +25,9 @@ namespace DoeSangue.Application.UseCases.Agendamentos
                 throw new ArgumentException("Doador inexistente.");
             }
 
-            if (doador.Usuario is null || doador.Usuario.Id != usuarioId)
+            if (!doador.EhUsuario || doador.UsuarioId != usuarioId)
             {
-                throw new UnauthorizedAccessException("O agendamento deve ser criado pelo próprio doador.");
+                throw new UnauthorizedAccessException("O agendamento deve ser criado pelo próprio doador. Apenas usuários cadastrados podem agendar doações.");
             }
 
             var hemocentro = await _hemocentroRepository.BuscarPorId(dto.HemocentroId);
@@ -60,3 +60,4 @@ namespace DoeSangue.Application.UseCases.Agendamentos
         }
     }
 }
+

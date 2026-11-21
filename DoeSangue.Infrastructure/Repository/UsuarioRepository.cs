@@ -56,8 +56,17 @@ namespace DoeSangue.Infrastructure.Repository
                 UserName = usuario.Email
             };
 
-            await _userManager.CreateAsync(usuarioModel, password);
-            await _userManager.AddToRoleAsync(usuarioModel, usuario.Role.ToString());
+            var resultadoCriacao = await _userManager.CreateAsync(usuarioModel, password);
+            if (!resultadoCriacao.Succeeded)
+            {
+                throw new ArgumentException(string.Join(" ", resultadoCriacao.Errors.Select(erro => erro.Description)));
+            }
+
+            var resultadoPerfil = await _userManager.AddToRoleAsync(usuarioModel, usuario.Role.ToString());
+            if (!resultadoPerfil.Succeeded)
+            {
+                throw new InvalidOperationException("Não foi possível atribuir o perfil à conta criada.");
+            }
         }
 
         public async Task Remover(Guid usuarioId)

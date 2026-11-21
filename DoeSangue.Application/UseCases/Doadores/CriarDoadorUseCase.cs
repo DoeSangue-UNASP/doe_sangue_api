@@ -29,7 +29,7 @@ namespace DoeSangue.Application.UseCases.Doadores
                                           doadorDto.Endereco.Estado);
 
             var usuario = Usuario.Criar(doadorDto.Email, UsuarioRole.DOADOR, endereco);
-            var doador = Doador.Criar(doadorDto.Nome, doadorDto.Documento, doadorDto.Telefone, doadorDto.DataNasimento, usuario);
+            var doador = Doador.CriarUsuario(doadorDto.Nome, doadorDto.Documento, doadorDto.Telefone, doadorDto.DataNasimento, usuario);
 
             endereco.Validar();
             usuario.Validar();
@@ -38,6 +38,17 @@ namespace DoeSangue.Application.UseCases.Doadores
             await _enderecoRepository.Criar(endereco);
             await _usuarioRepository.Criar(usuario, doadorDto.Senha);
             await _doadorRepository.Criar(doador);
+
+            // Atualizar leads existentes com mesmo documento
+            var leadsExistentes = await _doadorRepository.BuscarPorDocumento(doadorDto.Documento);
+            if (leadsExistentes != null)
+            {
+                foreach (var lead in leadsExistentes.Where(d => d.EhLead))
+                {
+                    lead.UsuarioId = usuario.Id;
+                    await _doadorRepository.Atualizar(lead);
+                }
+            }
         }
     }
 }

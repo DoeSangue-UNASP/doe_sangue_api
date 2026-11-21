@@ -97,7 +97,9 @@ namespace DoeSangue.Infrastructure.Repository
                     Documento = model.Agendamento.Doador.Documento,
                     Telefone = model.Agendamento.Doador.Telefone,
                     DataNascimento = model.Agendamento.Doador.DataNascimento,
-                    Usuario = new Usuario { Id = model.Agendamento.Doador.UsuarioId }
+                    UsuarioId = model.Agendamento.Doador.UsuarioId,
+                    HemocentroId = model.Agendamento.Doador.HemocentroId,
+                    Usuario = model.Agendamento.Doador.UsuarioId.HasValue ? new Usuario { Id = model.Agendamento.Doador.UsuarioId.Value } : null
                 },
                 Hemocentro = model.Agendamento?.Hemocentro is null ? new Hemocentro { Id = model.Agendamento!.HemocentroId } : new Hemocentro
                 {
