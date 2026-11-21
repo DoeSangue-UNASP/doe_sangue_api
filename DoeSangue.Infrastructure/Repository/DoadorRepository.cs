@@ -106,15 +106,15 @@ namespace DoeSangue.Infrastructure.Repository
             return usuario;
         }
 
+        // Doadores usuários são visíveis para qualquer hemocentro; leads, apenas para o hemocentro que os cadastrou
         public async Task<Doador?> BuscarPorIdDoHemocentro(Guid doadorId, Guid usuarioHemocentroId)
         {
             var doadorModel = await _context.Doadores
                 .AsNoTracking()
                 .FirstOrDefaultAsync(d =>
                     d.Id == doadorId &&
-                    _context.Agendamentos.Any(a =>
-                        a.DoadorId == d.Id &&
-                        a.Hemocentro.UsuarioId == usuarioHemocentroId));
+                    (d.UsuarioId != null ||
+                     _context.Hemocentros.Any(h => h.Id == d.HemocentroId && h.UsuarioId == usuarioHemocentroId)));
 
             if (doadorModel is null)
             {
@@ -134,17 +134,23 @@ namespace DoeSangue.Infrastructure.Repository
             return doador;
         }
 
+        // Todos os doadores usuários + os leads cadastrados pelo hemocentro.
+        // Um lead convertido em usuário pode coexistir com a linha do próprio usuário; mantém uma por pessoa,
+        // preferindo a linha do próprio usuário.
         public async Task<List<Doador>> BuscarTodosDoHemocentro(Guid usuarioHemocentroId)
         {
             var models = await _context.Doadores
-                .Where(d => _context.Agendamentos.Any(a =>
-                    a.DoadorId == d.Id &&
-                    a.Hemocentro.UsuarioId == usuarioHemocentroId))
+                .Where(d =>
+                    d.UsuarioId != null ||
+                    _context.Hemocentros.Any(h => h.Id == d.HemocentroId && h.UsuarioId == usuarioHemocentroId))
                 .AsNoTracking()
                 .OrderBy(x => x.Nome)
                 .ToListAsync();
 
-            return models.Select(x => x.ToDomain()).ToList();
+            return models
+                .GroupBy(x => x.UsuarioId ?? x.Id)
+                .Select(grupo => grupo.OrderBy(x => x.HemocentroId.HasValue).First().ToDomain())
+                .ToList();
         }
 
         public async Task<List<Doador>> BuscarLeadsEUsuariosDoHemocentro(Guid hemocentroId)
@@ -188,9 +194,13 @@ namespace DoeSangue.Infrastructure.Repository
 
         public async Task<List<Doador>?> BuscarPorDocumento(string documento)
         {
+            // Compara apenas os dígitos, pois o CPF pode ter sido salvo com ou sem máscara
+            var digitos = new string(documento.Where(char.IsDigit).ToArray());
+            if (digitos.Length == 0) return null;
+
             var models = await _context.Doadores
                 .AsNoTracking()
-                .Where(d => d.Documento == documento)
+                .Where(d => d.Documento.Replace(".", "").Replace("-", "").Replace(" ", "") == digitos)
                 .ToListAsync();
 
             if (!models.Any()) return null;

@@ -92,15 +92,16 @@ namespace DoeSangue.API.Controllers.Agendamentos
                     return NotFound("Doador inexistente.");
                 }
 
-                if (doador.EhLead)
-                {
-                    return BadRequest("Não é possível agendar uma doação com um lead. O doador deve se cadastrar na plataforma.");
-                }
-
-                var hemocentro = await _hemocentroRepository.BuscarPorId(dto.HemocentroId);
+                var hemocentro = await _hemocentroRepository.BuscarPorUsuarioId(usuarioId);
                 if (hemocentro is null)
                 {
                     return NotFound("Hemocentro inexistente.");
+                }
+
+                // Leads só podem ser agendados pelo hemocentro que os cadastrou
+                if (doador.EhLead && doador.HemocentroId != hemocentro.Id)
+                {
+                    return Forbid();
                 }
 
                 var horario = TimeOnly.FromTimeSpan(dto.AgendadoPara.TimeOfDay);

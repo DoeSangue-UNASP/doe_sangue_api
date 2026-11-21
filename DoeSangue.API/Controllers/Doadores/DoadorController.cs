@@ -21,6 +21,7 @@ namespace DoeSangue.API.Controllers.Doadores
         private readonly BuscarTodosDoadoresUseCase _buscarTodosDoadoresUseCase;
         private readonly ExcluirDoadorPorUsuarioId _excluirDoadorPorUsuarioId;
         private readonly AtualizarDoadorPorId _atualizarDoadorPorId;
+        private readonly AtualizarDoadorPeloHemocentroUseCase _atualizarDoadorPeloHemocentroUseCase;
         private readonly DoeSangueContext _context;
 
         public DoadorController(
@@ -30,6 +31,7 @@ namespace DoeSangue.API.Controllers.Doadores
             BuscarTodosDoadoresUseCase buscarTodosDoadoresUseCase,
             ExcluirDoadorPorUsuarioId excluirDoadorPorUsuarioId,
             AtualizarDoadorPorId atualizarDoadorPorId,
+            AtualizarDoadorPeloHemocentroUseCase atualizarDoadorPeloHemocentroUseCase,
             DoeSangueContext context)
         {
             _criarDoadorUseCase = criarDoadorUseCase;
@@ -38,6 +40,7 @@ namespace DoeSangue.API.Controllers.Doadores
             _buscarTodosDoadoresUseCase = buscarTodosDoadoresUseCase;
             _excluirDoadorPorUsuarioId = excluirDoadorPorUsuarioId;
             _atualizarDoadorPorId = atualizarDoadorPorId;
+            _atualizarDoadorPeloHemocentroUseCase = atualizarDoadorPeloHemocentroUseCase;
             _context = context;
         }
 
@@ -149,6 +152,26 @@ namespace DoeSangue.API.Controllers.Doadores
             }
         }
 
+        [HttpPut("{doadorId:guid}")]
+        [Authorize(Roles = nameof(UsuarioRole.HEMOCENTRO))]
+        public async Task<IActionResult> AtualizarPeloHemocentro(Guid doadorId, [FromBody] AtualizarDoadorPeloHemocentroDto doadorDto)
+        {
+            if (!ObterUsuarioId(out var usuarioId))
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                await _atualizarDoadorPeloHemocentroUseCase.Executar(doadorId, usuarioId, doadorDto);
+                return NoContent();
+            }
+            catch (ArgumentException exception)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, exception.Message);
+            }
+        }
+
         private bool ObterUsuarioId(out Guid usuarioId)
         {
             return Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out usuarioId);
@@ -165,6 +188,8 @@ namespace DoeSangue.API.Controllers.Doadores
                 doador.Documento,
                 doador.Telefone,
                 doador.DataNascimento,
+                doador.Sexo,
+                doador.TipoSanguineo,
                 Email = doador.Usuario?.Email,
                 Endereco = endereco is null ? null : new
                 {
@@ -186,7 +211,11 @@ namespace DoeSangue.API.Controllers.Doadores
                 doador.Nome,
                 doador.Documento,
                 doador.Telefone,
-                doador.DataNascimento
+                doador.DataNascimento,
+                doador.Sexo,
+                doador.TipoSanguineo,
+                EhLead = doador.EhLead,
+                EhUsuario = doador.EhUsuario
             };
         }
     }

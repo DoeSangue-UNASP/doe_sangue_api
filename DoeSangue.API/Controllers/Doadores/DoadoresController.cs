@@ -95,6 +95,8 @@ namespace DoeSangue.API.Controllers.Doadores
                 Documento = d.Documento,
                 Telefone = d.Telefone,
                 DataNascimento = d.DataNascimento,
+                Sexo = d.Sexo,
+                TipoSanguineo = d.TipoSanguineo,
                 UsuarioId = d.UsuarioId,
                 HemocentroId = d.HemocentroId
             })).ToList();
@@ -111,6 +113,8 @@ namespace DoeSangue.API.Controllers.Doadores
                 doador.Documento,
                 doador.Telefone,
                 doador.DataNascimento,
+                doador.Sexo,
+                doador.TipoSanguineo,
                 ehLead = doador.EhLead,
                 ehUsuario = doador.EhUsuario
             };

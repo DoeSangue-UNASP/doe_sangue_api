@@ -23,7 +23,7 @@ namespace DoeSangue.Application.UseCases.Doadores
                 throw new InvalidOperationException("Hemocentro não encontrado.");
             }
 
-            var lead = Doador.CriarLead(leadDto.Nome, leadDto.Documento, leadDto.Telefone, leadDto.DataNascimento, hemocentro.Id);
+            var lead = Doador.CriarLead(leadDto.Nome, leadDto.Documento, leadDto.Telefone, leadDto.DataNascimento, hemocentro.Id, leadDto.Sexo, leadDto.TipoSanguineo);
             lead.Validar();
 
             await _doadorRepository.Criar(lead);

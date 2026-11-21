@@ -36,6 +36,9 @@ namespace DoeSangue.Application.UseCases.Doadores
                 Usuario = doadorExistente.Usuario
             };
 
+            // null mantém o valor atual; string vazia limpa o campo
+            doador.AtualizarDadosClinicos(doadorDto.Sexo ?? doadorExistente.Sexo, doadorDto.TipoSanguineo ?? doadorExistente.TipoSanguineo);
+
             doador.Validar();
 
             Endereco? enderecoAtualizado = null;
