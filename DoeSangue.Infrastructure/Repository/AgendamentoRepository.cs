@@ -120,6 +120,7 @@ namespace DoeSangue.Infrastructure.Repository
             }
 
             model.Status = agendamento.Status;
+            model.AgendadoPara = agendamento.AgendadoPara;
             model.AtualizadoEm = agendamento.AtualizadoEm;
             await _context.SaveChangesAsync();
         }

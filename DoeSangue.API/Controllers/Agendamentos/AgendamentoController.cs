@@ -19,6 +19,7 @@ namespace DoeSangue.API.Controllers.Agendamentos
         private readonly BuscarAgendamentosDoadorUseCase _buscarAgendamentosDoadorUseCase;
         private readonly BuscarAgendaHemocentroUseCase _buscarAgendaHemocentroUseCase;
         private readonly CancelarAgendamentoUseCase _cancelarAgendamentoUseCase;
+        private readonly ReagendarAgendamentoUseCase _reagendarAgendamentoUseCase;
         private readonly ConcluirAgendamentoUseCase _concluirAgendamentoUseCase;
         private readonly IDoadorRepository _doadorRepository;
         private readonly IHemocentroRepository _hemocentroRepository;
@@ -29,6 +30,7 @@ namespace DoeSangue.API.Controllers.Agendamentos
             BuscarAgendamentosDoadorUseCase buscarAgendamentosDoadorUseCase,
             BuscarAgendaHemocentroUseCase buscarAgendaHemocentroUseCase,
             CancelarAgendamentoUseCase cancelarAgendamentoUseCase,
+            ReagendarAgendamentoUseCase reagendarAgendamentoUseCase,
             ConcluirAgendamentoUseCase concluirAgendamentoUseCase,
             IDoadorRepository doadorRepository,
             IHemocentroRepository hemocentroRepository,
@@ -38,6 +40,7 @@ namespace DoeSangue.API.Controllers.Agendamentos
             _buscarAgendamentosDoadorUseCase = buscarAgendamentosDoadorUseCase;
             _buscarAgendaHemocentroUseCase = buscarAgendaHemocentroUseCase;
             _cancelarAgendamentoUseCase = cancelarAgendamentoUseCase;
+            _reagendarAgendamentoUseCase = reagendarAgendamentoUseCase;
             _concluirAgendamentoUseCase = concluirAgendamentoUseCase;
             _doadorRepository = doadorRepository;
             _hemocentroRepository = hemocentroRepository;
@@ -173,6 +176,30 @@ namespace DoeSangue.API.Controllers.Agendamentos
             try
             {
                 await _cancelarAgendamentoUseCase.Executar(agendamentoId, usuarioId);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
+            catch (ArgumentException ex)
+            {
+                return UnprocessableEntity(ex.Message);
+            }
+        }
+
+        [HttpPatch("{agendamentoId:guid}/reagendar")]
+        [Authorize(Roles = nameof(UsuarioRole.DOADOR))]
+        public async Task<IActionResult> Reagendar(Guid agendamentoId, [FromBody] ReagendarAgendamentoDto dto)
+        {
+            if (!ObterUsuarioId(out var usuarioId))
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                await _reagendarAgendamentoUseCase.Executar(agendamentoId, usuarioId, dto);
                 return NoContent();
             }
             catch (UnauthorizedAccessException)

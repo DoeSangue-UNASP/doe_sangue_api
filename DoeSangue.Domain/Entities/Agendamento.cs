@@ -73,4 +73,17 @@ public class Agendamento
         Status = StatusAgendamento.CONCLUIDO;
         AtualizadoEm = DateTime.UtcNow;
     }
+
+    public void Reagendar(DateTime novaData)
+    {
+        if (Status != StatusAgendamento.CANCELADO)
+            throw new ArgumentException("Somente agendamentos cancelados podem ser reagendados.");
+
+        if (novaData < DateTime.UtcNow)
+            throw new ArgumentException("A data do agendamento deve ser futura.");
+
+        AgendadoPara = novaData;
+        Status = StatusAgendamento.AGENDADO;
+        AtualizadoEm = DateTime.UtcNow;
+    }
 }

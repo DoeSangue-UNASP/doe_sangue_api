@@ -109,6 +109,7 @@ builder.Services.AddScoped<CriarAgendamentoUseCase>();
 builder.Services.AddScoped<BuscarAgendamentosDoadorUseCase>();
 builder.Services.AddScoped<BuscarAgendaHemocentroUseCase>();
 builder.Services.AddScoped<CancelarAgendamentoUseCase>();
+builder.Services.AddScoped<ReagendarAgendamentoUseCase>();
 builder.Services.AddScoped<ConcluirAgendamentoUseCase>();
 builder.Services.AddScoped<CriarBolsaSangueUseCase>();
 builder.Services.AddScoped<BuscarBolsasSangueUseCase>();
