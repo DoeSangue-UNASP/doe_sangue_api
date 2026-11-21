@@ -8,14 +8,14 @@ public class HemocentroModel
     public string Cnpj { get; set; }
     public string Site { get; set; }
     public string NomeFantasia { get; set; }
-    public DateTime AbreEm { get; set; }
-    public DateTime FechaEm { get; set; }
+    public TimeOnly AbreEm { get; set; }
+    public TimeOnly FechaEm { get; set; }
 
     public Guid UsuarioId { get; set; }
     public UsuarioIdentity Usuario { get; set; }
 
     public HemocentroModel() { }
-    public HemocentroModel(Guid id, string cnpj, string site, string nomeFantasia, DateTime abreEm, DateTime fechaEm, Guid usuarioId)
+    public HemocentroModel(Guid id, string cnpj, string site, string nomeFantasia, TimeOnly abreEm, TimeOnly fechaEm, Guid usuarioId)
     {
         Id = id;
         Cnpj = cnpj;

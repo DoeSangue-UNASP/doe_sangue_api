@@ -145,6 +145,9 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var dbContext = services.GetRequiredService<DoeSangueContext>();
+    await dbContext.Database.MigrateAsync();
+
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
     var roleDoador = await roleManager.FindByNameAsync(nameof(UsuarioRole.DOADOR));

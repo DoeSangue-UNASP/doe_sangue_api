@@ -173,13 +173,15 @@ namespace DoeSangue.Infrastructure.Data
                    .HasKey(x => x.Id);
 
             builder.Entity<HemocentroModel>()
-                   .Property(x => x.AbreEm);
+                   .Property(x => x.AbreEm)
+                   .HasColumnType("time");
 
             builder.Entity<HemocentroModel>()
                    .Property(x => x.Cnpj);
 
             builder.Entity<HemocentroModel>()
-                   .Property(x => x.FechaEm);
+                   .Property(x => x.FechaEm)
+                   .HasColumnType("time");
 
             builder.Entity<HemocentroModel>()
                    .Property(x => x.NomeFantasia);

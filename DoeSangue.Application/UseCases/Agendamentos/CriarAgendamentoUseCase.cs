@@ -36,9 +36,9 @@ namespace DoeSangue.Application.UseCases.Agendamentos
                 throw new ArgumentException("Hemocentro inexistente.");
             }
 
-            var horario = dto.AgendadoPara.TimeOfDay;
-            var abertura = hemocentro.AbreEm.TimeOfDay;
-            var fechamento = hemocentro.FechaEm.TimeOfDay;
+            var horario = TimeOnly.FromTimeSpan(dto.AgendadoPara.TimeOfDay);
+            var abertura = hemocentro.AbreEm;
+            var fechamento = hemocentro.FechaEm;
             var horarioDisponivel = fechamento != abertura &&
                 (fechamento > abertura
                     ? horario >= abertura && horario < fechamento

@@ -6,14 +6,14 @@ public class Hemocentro
     public string Cnpj { get; set; } = string.Empty;
     public string Site { get; set; } = string.Empty;
     public string NomeFantasia { get; set; } = string.Empty;
-    public DateTime AbreEm { get; set; }
-    public DateTime FechaEm { get; set; }
+    public TimeOnly AbreEm { get; set; }
+    public TimeOnly FechaEm { get; set; }
 
     public Usuario Usuario { get; set; }
 
     public Hemocentro() { }
 
-    private Hemocentro(Guid id, string cnpj, string site, string nomeFantasia, DateTime abreEm, DateTime fechaEm, Usuario usuario)
+    private Hemocentro(Guid id, string cnpj, string site, string nomeFantasia, TimeOnly abreEm, TimeOnly fechaEm, Usuario usuario)
     {
         Id = id;
         Cnpj = cnpj;
@@ -24,7 +24,7 @@ public class Hemocentro
         Usuario = usuario;
     }
 
-    public static Hemocentro Criar(string cnpj, string site, string nomeFantasia, DateTime abreEm, DateTime fechaEm, Usuario usuario)
+    public static Hemocentro Criar(string cnpj, string site, string nomeFantasia, TimeOnly abreEm, TimeOnly fechaEm, Usuario usuario)
     {
         var hemocentro = new Hemocentro(id: Guid.NewGuid(),
                                         cnpj: cnpj,
@@ -50,7 +50,7 @@ public class Hemocentro
         if (string.IsNullOrWhiteSpace(NomeFantasia))
             throw new ArgumentException("O nome fantasia é obrigatório.");
 
-        if (AbreEm.TimeOfDay == FechaEm.TimeOfDay)
+        if (AbreEm == FechaEm)
             throw new ArgumentException("O horário de abertura e fechamento do hemocentro não pode ser igual.");
 
         if (Usuario == null)

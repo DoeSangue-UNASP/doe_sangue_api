@@ -1,5 +1,38 @@
 # Doe Sangue
 
+## Executar com Docker Compose
+
+Pré-requisitos: Docker Desktop com o Compose habilitado.
+
+Na raiz do projeto, execute:
+
+```bash
+docker compose up --build
+```
+
+A API ficará disponível em `http://localhost:8080`. O Swagger estará em `http://localhost:8080/swagger`.
+
+O SQL Server ficará disponível em `localhost,1433`. As credenciais padrão são `sa` e `DoeSangue_Strong_Password_2026`. Para personalizá-las, crie um arquivo `.env` na raiz:
+
+```env
+MSSQL_SA_PASSWORD=SuaSenhaForteAqui
+JWT_SECRET_KEY=SuaChaveJWTComPeloMenos32Caracteres
+JWT_ISSUER=DoeSangue.API
+JWT_AUDIENCE=DoeSangue.Client
+```
+
+Para encerrar os containers:
+
+```bash
+docker compose down
+```
+
+Para também remover os dados do banco:
+
+```bash
+docker compose down -v
+```
+
 ## Estrutura do Projeto
 
 Neste projeto usamos Clean Architecture para modularizar o sistema a fim de facilitar a manutenção.

@@ -211,15 +211,15 @@ namespace DoeSangue.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("AbreEm")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("AbreEm")
+                        .HasColumnType("time");
 
                     b.Property<string>("Cnpj")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaEm")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("FechaEm")
+                        .HasColumnType("time");
 
                     b.Property<string>("NomeFantasia")
                         .IsRequired()
