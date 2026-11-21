@@ -2,7 +2,7 @@
 
 public class Depoimento
 {
-    public Guid Id { get; set; } =  Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string Titulo { get; set; } = string.Empty;
     public string Conteudo { get; set; } = string.Empty;
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;

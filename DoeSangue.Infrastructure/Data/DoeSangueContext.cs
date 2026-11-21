@@ -23,6 +23,15 @@ namespace DoeSangue.Infrastructure.Data
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = "Server=.;Database=DoeSangue;Integrated Security=true;TrustServerCertificate=true";
+                optionsBuilder.UseSqlServer(connectionString);
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             #region Agendamento

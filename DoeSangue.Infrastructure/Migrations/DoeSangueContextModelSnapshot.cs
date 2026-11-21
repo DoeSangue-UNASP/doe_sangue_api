@@ -151,6 +151,9 @@ namespace DoeSangue.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("HemocentroId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -159,13 +162,16 @@ namespace DoeSangue.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UsuarioId")
+                    b.Property<Guid?>("UsuarioId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HemocentroId");
+
                     b.HasIndex("UsuarioId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[UsuarioId] IS NOT NULL");
 
                     b.ToTable("Doadores");
                 });
@@ -492,11 +498,15 @@ namespace DoeSangue.Infrastructure.Migrations
 
             modelBuilder.Entity("DoeSangue.Infrastructure.Models.DoadorModel", b =>
                 {
+                    b.HasOne("DoeSangue.Infrastructure.Models.HemocentroModel", "Hemocentro")
+                        .WithMany()
+                        .HasForeignKey("HemocentroId");
+
                     b.HasOne("DoeSangue.Infrastructure.Models.UsuarioIdentity", "Usuario")
                         .WithOne()
-                        .HasForeignKey("DoeSangue.Infrastructure.Models.DoadorModel", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DoeSangue.Infrastructure.Models.DoadorModel", "UsuarioId");
+
+                    b.Navigation("Hemocentro");
 
                     b.Navigation("Usuario");
                 });

@@ -29,20 +29,6 @@ namespace DoeSangue.Infrastructure.Migrations
                 table: "Doadores",
                 column: "HemocentroId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Doadores_Documento_HemocentroId",
-                table: "Doadores",
-                columns: new[] { "Documento", "HemocentroId" },
-                unique: true,
-                filter: "[HemocentroId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Doadores_Documento_UsuarioId",
-                table: "Doadores",
-                columns: new[] { "Documento", "UsuarioId" },
-                unique: true,
-                filter: "[UsuarioId] IS NOT NULL");
-
             migrationBuilder.AddForeignKey(
                 name: "FK_Doadores_Hemocentros_HemocentroId",
                 table: "Doadores",
@@ -60,14 +46,6 @@ namespace DoeSangue.Infrastructure.Migrations
 
             migrationBuilder.DropIndex(
                 name: "IX_Doadores_HemocentroId",
-                table: "Doadores");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Doadores_Documento_HemocentroId",
-                table: "Doadores");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Doadores_Documento_UsuarioId",
                 table: "Doadores");
 
             migrationBuilder.DropColumn(
