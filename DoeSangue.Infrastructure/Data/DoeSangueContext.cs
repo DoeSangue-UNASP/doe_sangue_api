@@ -96,6 +96,21 @@ namespace DoeSangue.Infrastructure.Data
                    .Property(x => x.Volume);
 
             builder.Entity<BolsaSangueModel>()
+                   .Property(x => x.DataColeta);
+
+            builder.Entity<BolsaSangueModel>()
+                   .Property(x => x.DataValidade);
+
+            builder.Entity<BolsaSangueModel>()
+                   .Property(x => x.LocalColeta);
+
+            builder.Entity<BolsaSangueModel>()
+                   .Property(x => x.Destino);
+
+            builder.Entity<BolsaSangueModel>()
+                   .Property(x => x.ResponsavelColeta);
+
+            builder.Entity<BolsaSangueModel>()
                    .HasOne(x => x.Agendamento)
                    .WithOne()
                    .HasForeignKey<BolsaSangueModel>(x => x.AgendamentoId);

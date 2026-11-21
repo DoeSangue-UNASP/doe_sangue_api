@@ -75,8 +75,23 @@ namespace DoeSangue.Infrastructure.Migrations
                     b.Property<DateTime>("CriadoEm")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DataColeta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataValidade")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Destino")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FatorRh")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LocalColeta")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResponsavelColeta")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -158,8 +173,14 @@ namespace DoeSangue.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Sexo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Telefone")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TipoSanguineo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("UsuarioId")

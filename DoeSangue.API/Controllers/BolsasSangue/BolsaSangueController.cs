@@ -129,8 +129,15 @@ namespace DoeSangue.API.Controllers.BolsasSangue
                 bolsa.Volume,
                 bolsa.Status,
                 bolsa.CriadoEm,
+                bolsa.DataColeta,
+                bolsa.DataValidade,
+                bolsa.LocalColeta,
+                bolsa.Destino,
+                bolsa.ResponsavelColeta,
                 AgendamentoId = bolsa.Agendamento.Id,
+                AgendadoPara = bolsa.Agendamento.AgendadoPara,
                 Hemocentro = bolsa.Agendamento.Hemocentro.NomeFantasia,
+                DoadorId = bolsa.Agendamento.Doador.Id,
                 Doador = bolsa.Agendamento.Doador.Nome
             };
         }

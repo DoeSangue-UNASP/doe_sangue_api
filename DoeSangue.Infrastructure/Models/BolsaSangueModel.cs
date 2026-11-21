@@ -14,6 +14,11 @@ public class BolsaSangueModel
     public StatusBolsa Status { get; set; }
     public DateTime CriadoEm { get; set; }
     public DateTime? AtualizadoEm { get; set; }
+    public DateTime? DataColeta { get; set; }
+    public DateTime? DataValidade { get; set; }
+    public string? LocalColeta { get; set; }
+    public string? Destino { get; set; }
+    public string? ResponsavelColeta { get; set; }
 
     public Guid AgendamentoId { get; set; }
     public AgendamentoModel Agendamento { get; set; }
@@ -30,7 +35,12 @@ public class BolsaSangueModel
                             StatusBolsa status,
                             DateTime criadoEm,
                             DateTime? atualizadoEm,
-                            Guid agendamentoId)
+                            Guid agendamentoId,
+                            DateTime? dataColeta = null,
+                            DateTime? dataValidade = null,
+                            string? localColeta = null,
+                            string? destino = null,
+                            string? responsavelColeta = null)
     {
         Id = id;
         Codigo = codigo;
@@ -43,5 +53,10 @@ public class BolsaSangueModel
         CriadoEm = criadoEm;
         AtualizadoEm = atualizadoEm;
         AgendamentoId = agendamentoId;
+        DataColeta = dataColeta;
+        DataValidade = dataValidade;
+        LocalColeta = localColeta;
+        Destino = destino;
+        ResponsavelColeta = responsavelColeta;
     }
 }

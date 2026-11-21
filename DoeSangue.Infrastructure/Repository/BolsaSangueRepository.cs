@@ -28,7 +28,12 @@ namespace DoeSangue.Infrastructure.Repository
                 bolsaSangue.Status,
                 bolsaSangue.CriadoEm,
                 bolsaSangue.AtualizadoEm,
-                bolsaSangue.Agendamento.Id);
+                bolsaSangue.Agendamento.Id,
+                bolsaSangue.DataColeta,
+                bolsaSangue.DataValidade,
+                bolsaSangue.LocalColeta,
+                bolsaSangue.Destino,
+                bolsaSangue.ResponsavelColeta);
 
             await _context.BolsasSangue.AddAsync(bolsaModel);
             await _context.SaveChangesAsync();
@@ -125,6 +130,11 @@ namespace DoeSangue.Infrastructure.Repository
                 Status = model.Status,
                 CriadoEm = model.CriadoEm,
                 AtualizadoEm = model.AtualizadoEm,
+                DataColeta = model.DataColeta,
+                DataValidade = model.DataValidade,
+                LocalColeta = model.LocalColeta,
+                Destino = model.Destino,
+                ResponsavelColeta = model.ResponsavelColeta,
                 Agendamento = agendamento
             };
         }

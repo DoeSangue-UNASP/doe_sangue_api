@@ -16,6 +16,11 @@ public class BolsaSangue
     public StatusBolsa Status { get; set; } = StatusBolsa.EM_ANALISE;
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
     public DateTime? AtualizadoEm { get; set; }
+    public DateTime? DataColeta { get; set; }
+    public DateTime? DataValidade { get; set; }
+    public string? LocalColeta { get; set; }
+    public string? Destino { get; set; }
+    public string? ResponsavelColeta { get; set; }
 
     public Agendamento Agendamento { get; set; }
 
@@ -29,7 +34,12 @@ public class BolsaSangue
                         StatusBolsa status,
                         DateTime criadoEm,
                         DateTime? atualizadoEm,
-                        Agendamento agendamento)
+                        Agendamento agendamento,
+                        DateTime? dataColeta,
+                        DateTime? dataValidade,
+                        string? localColeta,
+                        string? destino,
+                        string? responsavelColeta)
     {
         Id = id;
         Codigo = codigo;
@@ -42,6 +52,11 @@ public class BolsaSangue
         CriadoEm = criadoEm;
         AtualizadoEm = atualizadoEm;
         Agendamento = agendamento;
+        DataColeta = dataColeta;
+        DataValidade = dataValidade;
+        LocalColeta = Normalizar(localColeta);
+        Destino = Normalizar(destino);
+        ResponsavelColeta = Normalizar(responsavelColeta);
     }
 
     public static BolsaSangue Criar(string codigo,
@@ -50,7 +65,12 @@ public class BolsaSangue
                                     string fatorRh,
                                     string tipoSanguineo,
                                     float volume,
-                                    Agendamento agendamento)
+                                    Agendamento agendamento,
+                                    DateTime? dataColeta,
+                                    DateTime? dataValidade,
+                                    string? localColeta = null,
+                                    string? destino = null,
+                                    string? responsavelColeta = null)
     {
         var bolsa = new BolsaSangue(id: Guid.NewGuid(),
                                     codigo: codigo,
@@ -62,12 +82,20 @@ public class BolsaSangue
                                     status: StatusBolsa.EM_ANALISE,
                                     criadoEm: DateTime.UtcNow,
                                     atualizadoEm: null,
-                                    agendamento: agendamento);
+                                    agendamento: agendamento,
+                                    dataColeta: dataColeta,
+                                    dataValidade: dataValidade,
+                                    localColeta: localColeta,
+                                    destino: destino,
+                                    responsavelColeta: responsavelColeta);
 
         bolsa.Validar();
 
         return bolsa;
     }
+
+    private static string? Normalizar(string? valor) =>
+        string.IsNullOrWhiteSpace(valor) ? null : valor.Trim();
 
     public void Validar()
     {
@@ -88,6 +116,15 @@ public class BolsaSangue
 
         if (Volume <= 0)
             throw new ArgumentException("O volume deve ser maior que zero.");
+
+        if (DataColeta is null)
+            throw new ArgumentException("A data de coleta é obrigatória.");
+
+        if (DataValidade is null)
+            throw new ArgumentException("A data de validade é obrigatória.");
+
+        if (DataValidade < DataColeta)
+            throw new ArgumentException("A data de validade deve ser posterior à data de coleta.");
 
         if (Agendamento == null)
             throw new ArgumentException("O agendamento associado é obrigatório.");

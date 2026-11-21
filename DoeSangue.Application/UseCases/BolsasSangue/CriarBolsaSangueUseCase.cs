@@ -41,7 +41,12 @@ namespace DoeSangue.Application.UseCases.BolsasSangue
                 dto.FatorRh,
                 dto.TipoSanguineo,
                 dto.Volume,
-                agendamento);
+                agendamento,
+                dto.DataColeta,
+                dto.DataValidade,
+                dto.LocalColeta,
+                dto.Destino,
+                dto.ResponsavelColeta);
 
             await _bolsaSangueRepository.Criar(bolsa);
         }
