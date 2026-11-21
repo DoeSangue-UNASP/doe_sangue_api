@@ -19,17 +19,20 @@ namespace DoeSangue.API.Controllers.Hemocentros
     {
         private readonly CriarHemocentroUseCase _criarHemocentroUseCase;
         private readonly BuscarHemocentroPorUsuarioIdUseCase _buscarHemocentroPorUsuarioIdUseCase;
+        private readonly BuscarTodosHemocentrosUseCase _buscarTodosHemocentrosUseCase;
         private readonly CadastrarLeadUseCase _cadastrarLeadUseCase;
         private readonly DoeSangueContext _context;
 
         public HemocentroController(
             CriarHemocentroUseCase criarHemocentroUseCase,
             BuscarHemocentroPorUsuarioIdUseCase buscarHemocentroPorUsuarioIdUseCase,
+            BuscarTodosHemocentrosUseCase buscarTodosHemocentrosUseCase,
             CadastrarLeadUseCase cadastrarLeadUseCase,
             DoeSangueContext context)
         {
             _criarHemocentroUseCase = criarHemocentroUseCase;
             _buscarHemocentroPorUsuarioIdUseCase = buscarHemocentroPorUsuarioIdUseCase;
+            _buscarTodosHemocentrosUseCase = buscarTodosHemocentrosUseCase;
             _cadastrarLeadUseCase = cadastrarLeadUseCase;
             _context = context;
         }
@@ -49,6 +52,21 @@ namespace DoeSangue.API.Controllers.Hemocentros
             catch (ArgumentException exception)
             {
                 return StatusCode(StatusCodes.Status422UnprocessableEntity, exception.Message);
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> BuscarTodos()
+        {
+            try
+            {
+                var hemocentros = await _buscarTodosHemocentrosUseCase.Executar();
+                return Ok(hemocentros.Select(MapearHemocentro));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

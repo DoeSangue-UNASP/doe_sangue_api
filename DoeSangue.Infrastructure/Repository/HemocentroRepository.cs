@@ -84,6 +84,36 @@ namespace DoeSangue.Infrastructure.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Hemocentro>> BuscarTodos()
+        {
+            var hemocentrosModel = await _context.Hemocentros
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (hemocentrosModel.Count == 0)
+            {
+                return new List<Hemocentro>();
+            }
+
+            var hemocentros = new List<Hemocentro>();
+
+            foreach (var hemocentroModel in hemocentrosModel)
+            {
+                var hemocentro = hemocentroModel.ToDomain();
+                var usuarioModel = await _userManager.FindByIdAsync(hemocentroModel.UsuarioId.ToString());
+
+                if (usuarioModel is not null)
+                {
+                    var usuario = usuarioModel.ToDomain();
+                    hemocentro.AdicionarUsuario(usuario);
+                }
+
+                hemocentros.Add(hemocentro);
+            }
+
+            return hemocentros;
+        }
+
         public async Task Remover(Guid usuarioId)
         {
             var hemocentroModel = await _context.Hemocentros.FirstOrDefaultAsync(d => d.UsuarioId == usuarioId);

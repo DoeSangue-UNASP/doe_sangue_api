@@ -8,6 +8,7 @@ namespace DoeSangue.Domain.Interfaces
         Task Atualizar(Hemocentro hemocentro);
         Task<Hemocentro?> BuscarPorId(Guid hemocentroId);
         Task<Hemocentro?> BuscarPorUsuarioId(Guid usuarioId);
+        Task<List<Hemocentro>> BuscarTodos();
         Task Remover(Guid usuarioId);
     }
 }

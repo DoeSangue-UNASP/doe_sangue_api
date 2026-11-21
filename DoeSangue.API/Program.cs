@@ -100,6 +100,7 @@ builder.Services.AddScoped<ExcluirDoadorPorUsuarioId>();
 builder.Services.AddScoped<AtualizarDoadorPorId>();
 builder.Services.AddScoped<CriarHemocentroUseCase>();
 builder.Services.AddScoped<BuscarHemocentroPorUsuarioIdUseCase>();
+builder.Services.AddScoped<BuscarTodosHemocentrosUseCase>();
 builder.Services.AddScoped<CriarDepoimentoUseCase>();
 builder.Services.AddScoped<BuscarDepoimentosUseCase>();
 builder.Services.AddScoped<CriarAgendamentoUseCase>();
